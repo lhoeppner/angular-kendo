@@ -81,16 +81,23 @@ angular.module('kendo.directives').factory('directiveFactory', ['widgetFactory',
                 throw new Error('ng-model used but ' + kendoWidget + ' does not define a value accessor');
               }
 
+              // set widget value from model (explicitly set to null if model value is undefined)
+              var updateWidgetValue = function() {
+                if (typeof ngModel.$viewValue !== 'undefined') {
+                  widget.value(ngModel.$viewValue);
+                } else {
+                  widget.value(null);
+                }
+              };
+
               // Angular will invoke $render when the view needs to be updated with the view value.
               ngModel.$render = function() {
                 // Update the widget with the view value.
-                widget.value(ngModel.$viewValue || null);
+                updateWidgetValue();
               };
 
-              // if the model value is undefined, then we set the widget value to match ( == null/undefined )
-              if (widget.value !== undefined) {
-                widget.value(ngModel.$viewValue || null);
-              }
+              // initialize widget value
+              updateWidgetValue();
 
               // In order to be able to update the angular scope objects, 
               // we need to know when the change event is fired for a Kendo UI Widget.
