@@ -35,11 +35,18 @@
 
             // update the widget if any
             var role = element.data("role");
-            var widgetType = role.charAt(0).toUpperCase() + role.slice(1);
-            var w = element.data("kendo" + widgetType);
+            var widget;
+            if (role) {
+              var widgetType = role.charAt(0).toUpperCase() + role.slice(1);
+              widget = element.data("kendo" + widgetType);
+            }
 
-            if (w && typeof w.setDataSource === "function") {
-              w.setDataSource(element.data('$kendoDataSource'));
+            if (!widget) {
+              widget = kendo.widgetInstance(element, kendo.ui);
+            }
+
+            if (widget && typeof widget.setDataSource === "function") {
+              widget.setDataSource(element.data('$kendoDataSource'));
             }
           }
         }, true);
