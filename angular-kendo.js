@@ -17,9 +17,7 @@
       };
 
       var init = function(scope, element, attrs, role) {
-
         var type = types[role] || 'DataSource';
-
         var ds = toDataSource(scope.$eval(attrs.kDataSource), type);
 
         // // Set $kendoDataSource in the element's data. 3rd parties can define their own dataSource creation
@@ -28,19 +26,25 @@
 
         // Keep the element's data up-to-date with changes.
         scope.$watch(attrs.kDataSource, function(mew, old){
+          var role;
+          var widget;
+          var widgetType;
+
           if(mew !== old) {
             element.data('$kendoDataSource',
               toDataSource(mew, type)
             );
 
             // update the widget if any
-            var role = element.data("role");
-            var widget;
+            // try getting widget from role attr
+            role = element.data("role");
+
             if (role) {
-              var widgetType = role.charAt(0).toUpperCase() + role.slice(1);
+              widgetType = role.charAt(0).toUpperCase() + role.slice(1);
               widget = element.data("kendo" + widgetType);
             }
 
+            // if no role attr, try kendo.widgetInstance
             if (!widget) {
               widget = kendo.widgetInstance(element, kendo.ui);
             }
