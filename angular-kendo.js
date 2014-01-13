@@ -42,7 +42,7 @@
               w.setDataSource(element.data('$kendoDataSource'));
             }
           }
-        });
+        }, true);
 
         return ds;
       };
